@@ -20,7 +20,7 @@ namespace CorridaDosDados.ConsoleApp
             { "lost", ["0", "Você se perde no caminho, portanto volta onde parou, volta a posição anterior"] },
             { "+turn", ["+", "Você ultrapassou muito o outro competidor, mais 1 turno"] }
         };
-        string[] vetorCaminhoPartida = constroiArrayVetorCaminhoPartida(); 
+        string[] vetorCaminhoPartida = constroiArrayVetorCaminhoPartida();
 
         static string[] constroiArrayVetorCaminhoPartida()
         {
@@ -30,7 +30,7 @@ namespace CorridaDosDados.ConsoleApp
             string[] vetorCaminhoPartidaStr = new string[arrayTamanho];
 
             // construindo array vetorCaminhoPartida
-            for (int numero = 0; numero == arrayTamanho; numero++)
+            for (int numero = 0; numero < arrayTamanho; numero++)
                 vetorCaminhoPartidaStr[numero] = vetorCaminhoPartidaInt[numero].ToString();
 
             return vetorCaminhoPartidaStr;
@@ -42,19 +42,20 @@ namespace CorridaDosDados.ConsoleApp
             bool comandoApertado = false;
             while (comandoApertado == false)
             {
-                Console.Write("\nVez do jogador rolar o dado: ");
+                Console.Write("\n Vez do jogador rolar o dado: ");
                 string comando = Console.ReadLine();
 
                 if (comando == "")
                     comandoApertado = true;
                 else
-                    Console.WriteLine("\nEntrada incorreta");
+                    Console.WriteLine("\n Entrada incorreta");
             }
         }
 
         // cria o mapameanto dos eventos especiais da partida
-        void criaEventosEspeciais()
+        static void criaEventosEspeciais()
         {
+            var program = new Program();
             // cria lista com o nome dos eventos especiais
             string[] vetorEventosEspeciais = eventosEspeciais.Keys.ToArray();
 
@@ -68,54 +69,59 @@ namespace CorridaDosDados.ConsoleApp
             // cria o vetor mapeado com o os eventos especiais
             for (int i = 0; i < DeEventosEspeciais; i++)
             {
-                posicaoCaminho = numeroAleatorio.Next(0, 31);
+                posicaoCaminho = numeroAleatorio.Next(0, 30);
 
-                if (vetorCaminhoPartida[posicaoCaminho] == "0")
+                if (program.vetorCaminhoPartida[posicaoCaminho] == "0")
                 {
-                    posicao = numeroAleatorio.Next(0, 5);
+                    posicao = numeroAleatorio.Next(0, 6);
 
-                    vetorCaminhoPartida[posicaoCaminho] = vetorEventosEspeciais[posicao];
+                    program.vetorCaminhoPartida[posicaoCaminho] = vetorEventosEspeciais[posicao];
                 }
             }
         }
 
         // verifica de se ocorreu ou não um evento e a aplicação do seu efeito caso seja detectado
-        void ifEventoEspecial(int posicao, string turno)
+        static void ifEventoEspecial(int posicao, string turno)
         {
+            var program = new Program();
             string evento = "";
             string descricao = "";
             int efeito = 0;
+            string[] arrayEfeito = new string[2];
 
-            if (resultadoDado == 6)
+            if (program.resultadoDado == 6)
             {
                 evento = "+turn";
                 // string[] descricaoArray = eventosEspeciais[evento];
                 descricao = eventosEspeciais[evento][1];
 
-                Console.WriteLine($"Evento especial! {descricao}");
-                turnoAtivo = false;
+                Console.WriteLine($" Evento especial! {descricao}");
+                program.turnoAtivo = false;
             }
-            else if (vetorCaminhoPartida[posicao] != "0")
+            else if (program.vetorCaminhoPartida[posicao] != "0")
             {
-                evento = vetorCaminhoPartida[posicao];
-                efeito =  int.Parse(eventosEspeciais[evento][0]);
-                descricao = eventosEspeciais[evento][1];
+                evento = program.vetorCaminhoPartida[posicao];
 
-                Console.WriteLine($"Evento especial! {descricao}");
+                arrayEfeito = eventosEspeciais[evento];
+                efeito = int.Parse(arrayEfeito[0]);
+
+                descricao = arrayEfeito[1];
+
+                Console.WriteLine($" Evento especial! {descricao}");
 
                 if (turno == "jogador")
                 {
                     if (efeito == 0)
-                        posicaoJogador -= resultadoDado;
+                        program.posicaoJogador -= program.resultadoDado;
                     else
-                        posicaoJogador += efeito;
+                        program.posicaoJogador += efeito;
                 }
                 else if (turno == "cpu")
                 {
                     if (efeito == 0)
-                        posicaoCpu -= resultadoDado;
+                        program.posicaoCpu -= program.resultadoDado;
                     else
-                        posicaoCpu += efeito;
+                        program.posicaoCpu += efeito;
                 }
             }
         }
@@ -137,19 +143,25 @@ namespace CorridaDosDados.ConsoleApp
         }
 
         // faz a visualização da resolução da partida
-        void visualizarVitoriaDerrota(string turno)
+        static void visualizarVitoriaDerrota(string turno)
         {
+            var program = new Program();
+
             if (turno == "player")
-                Console.WriteLine("\n----- O JOGADOR VENCEU!!! -----\n");
+            {
+                Console.Clear();
+                Console.WriteLine(" ----- O JOGADOR VENCEU!!! -----\n");
+            }
             else if (turno == "cpu")
-                Console.WriteLine("\n----- A CPU VENCEU!!! -----\n");
+                Console.Clear();
+                Console.WriteLine(" ----- A CPU VENCEU!!! -----\n");
 
-            posicaoJogador = 0;
-            posicaoCpu = 0;
+            program.posicaoJogador = 0;
+            program.posicaoCpu = 0;
 
-            Console.WriteLine("Obrigado por jogar!");
+            Console.WriteLine(" Obrigado por jogar!");
 
-            Console.Write("Você quer jogar de novo? (S/N): ");
+            Console.Write("\n Você quer jogar de novo? (S/N): ");
             char opcao = Console.ReadLine()[0];
 
             opcao = char.ToUpper(opcao);
@@ -163,7 +175,75 @@ namespace CorridaDosDados.ConsoleApp
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            var program = new Program();
+
+            criaEventosEspeciais();
+
+            bool partida = false;
+
+            // executa os turnos do jogador e da CPU (computador)
+            while (partida == false)
+            {
+                int resultadoDado = 0;
+                // executa o turno do jogador
+
+                program.turnoAtivo = true;
+                while (program.turnoAtivo == true)
+                {
+                    confirmacaoComando();
+
+                    resultadoDado = dado();
+                    Console.WriteLine($"\n Dado do jogador: {resultadoDado}");
+
+                    program.posicaoJogador += resultadoDado;
+
+                    if (program.posicaoJogador <= 30)
+                        ifEventoEspecial(program.posicaoJogador, "jogador");
+
+                    if (program.posicaoJogador < 30)
+                        Console.WriteLine($" Posição do jogador: {program.posicaoJogador}");
+
+                    if (program.turnoAtivo == false)
+                        program.turnoAtivo = true;
+                    else
+                        program.turnoAtivo = false;
+                }
+
+                if (condicaoVitoria(program.posicaoJogador) == true)
+                {
+                    program.vitorioso = "jogador";
+                    break;
+                }
+
+                // executa o turno da CPU
+                program.turnoAtivo = true;
+                while (program.turnoAtivo == true)
+                {
+                    resultadoDado = dado();
+                    Console.WriteLine($"\n Dado da CPU: {resultadoDado}");
+
+                    program.posicaoCpu += resultadoDado;
+
+                    if (program.posicaoCpu <= 30)
+                        ifEventoEspecial(program.posicaoCpu, "cpu");
+
+                    if (program.posicaoCpu < 30)
+                        Console.WriteLine($" Posição da CPU: {program.posicaoCpu}");
+
+                    if (program.turnoAtivo == false)
+                        program.turnoAtivo = true;
+                    else
+                        program.turnoAtivo = false;
+                }
+
+                if (condicaoVitoria(program.posicaoCpu) == true)
+                {
+                    program.vitorioso = "cpu";
+                    break;
+                }
+            }
+
+            visualizarVitoriaDerrota(program.vitorioso);
         }
     }
 }
