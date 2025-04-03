@@ -127,6 +127,15 @@ namespace CorridaDosDados.ConsoleApp
             return numeroAleatorio.Next(1, 7);
         }
 
+        // verifica a condição de vitória
+        static bool condicaoVitoria(int posicao)
+        {
+            if (posicao == 30 || posicao > 30)
+                return true;
+            else
+                return false;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
