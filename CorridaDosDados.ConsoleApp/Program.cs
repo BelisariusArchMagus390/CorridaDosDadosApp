@@ -136,6 +136,31 @@ namespace CorridaDosDados.ConsoleApp
                 return false;
         }
 
+        // faz a visualização da resolução da partida
+        void visualizarVitoriaDerrota(string turno)
+        {
+            if (turno == "player")
+                Console.WriteLine("\n----- O JOGADOR VENCEU!!! -----\n");
+            else if (turno == "cpu")
+                Console.WriteLine("\n----- A CPU VENCEU!!! -----\n");
+
+            posicaoJogador = 0;
+            posicaoCpu = 0;
+
+            Console.WriteLine("Obrigado por jogar!");
+
+            Console.Write("Você quer jogar de novo? (S/N): ");
+            char opcao = Console.ReadLine()[0];
+
+            opcao = char.ToUpper(opcao);
+
+            if (opcao == 'S')
+                Main(new string[] { });
+            else if (opcao == 'N')
+                Environment.Exit(0);
+
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
