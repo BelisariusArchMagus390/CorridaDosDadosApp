@@ -5,11 +5,11 @@ namespace CorridaDosDados.ConsoleApp
     internal class Program
     {
         // cria as variáveis globais
-        int posicaoJogador = 0;
-        int posicaoCpu = 0;
-        string vitorioso = "";
-        int resultadoDado = 0;
-        bool turnoAtivo = true;
+        static int posicaoJogador = 0;
+        static int posicaoCpu = 0;
+        static string vitorioso = "";
+        static int resultadoDado = 0;
+        static bool turnoAtivo = true;
         // cria dicionário que guarda os eventos especiais da partida
         static Dictionary<string, string[]> eventosEspeciais = new Dictionary<string, string[]>
         {
@@ -20,20 +20,18 @@ namespace CorridaDosDados.ConsoleApp
             { "lost", ["0", "Você se perde no caminho, portanto volta onde parou, volta a posição anterior"] },
             { "+turn", ["+", "Você ultrapassou muito o outro competidor, mais 1 turno"] }
         };
-        string[] vetorCaminhoPartida = constroiArrayVetorCaminhoPartida();
+        static string[] vetorCaminhoPartida = new string[30];
 
-        static string[] constroiArrayVetorCaminhoPartida()
+        static void constroiArrayVetorCaminhoPartida()
         {
+            var program = new Program();
             // definindo arrays inteiro e string de vetorCaminhoPartida
             int[] vetorCaminhoPartidaInt = Enumerable.Repeat(0, 30).ToArray();
             int arrayTamanho = vetorCaminhoPartidaInt.Length;
-            string[] vetorCaminhoPartidaStr = new string[arrayTamanho];
 
             // construindo array vetorCaminhoPartida
             for (int numero = 0; numero < arrayTamanho; numero++)
-                vetorCaminhoPartidaStr[numero] = vetorCaminhoPartidaInt[numero].ToString();
-
-            return vetorCaminhoPartidaStr;
+                vetorCaminhoPartida[numero] = vetorCaminhoPartidaInt[numero].ToString();
         }
 
         // verifica a entrada do usuário
@@ -70,12 +68,12 @@ namespace CorridaDosDados.ConsoleApp
             for (int i = 0; i < DeEventosEspeciais; i++)
             {
                 posicaoCaminho = numeroAleatorio.Next(0, 30);
-
-                if (program.vetorCaminhoPartida[posicaoCaminho] == "0")
+                
+                if (vetorCaminhoPartida[posicaoCaminho] == "0")
                 {
-                    posicao = numeroAleatorio.Next(0, 6);
+                    posicao = numeroAleatorio.Next(0, 5);
 
-                    program.vetorCaminhoPartida[posicaoCaminho] = vetorEventosEspeciais[posicao];
+                    vetorCaminhoPartida[posicaoCaminho] = vetorEventosEspeciais[posicao];
                 }
             }
         }
@@ -89,22 +87,23 @@ namespace CorridaDosDados.ConsoleApp
             int efeito = 0;
             string[] arrayEfeito = new string[2];
 
-            if (program.resultadoDado == 6)
+            if (resultadoDado == 6)
             {
+                arrayEfeito = eventosEspeciais[evento];
                 evento = "+turn";
                 // string[] descricaoArray = eventosEspeciais[evento];
-                descricao = eventosEspeciais[evento][1];
+                descricao = arrayEfeito[1];
 
                 Console.WriteLine($" Evento especial! {descricao}");
-                program.turnoAtivo = false;
+                turnoAtivo = false;
             }
-            else if (program.vetorCaminhoPartida[posicao] != "0")
+            else if ((posicao <= 29) && (vetorCaminhoPartida[posicao] != "0"))
             {
-                evento = program.vetorCaminhoPartida[posicao];
+                evento = vetorCaminhoPartida[posicao];
 
                 arrayEfeito = eventosEspeciais[evento];
-                efeito = int.Parse(arrayEfeito[0]);
 
+                efeito = int.Parse(arrayEfeito[0]);
                 descricao = arrayEfeito[1];
 
                 Console.WriteLine($" Evento especial! {descricao}");
@@ -112,16 +111,16 @@ namespace CorridaDosDados.ConsoleApp
                 if (turno == "jogador")
                 {
                     if (efeito == 0)
-                        program.posicaoJogador -= program.resultadoDado;
+                        posicaoJogador -= resultadoDado;
                     else
-                        program.posicaoJogador += efeito;
+                        posicaoJogador += efeito;
                 }
                 else if (turno == "cpu")
                 {
                     if (efeito == 0)
-                        program.posicaoCpu -= program.resultadoDado;
+                        posicaoCpu -= resultadoDado;
                     else
-                        program.posicaoCpu += efeito;
+                        posicaoCpu += efeito;
                 }
             }
         }
@@ -153,11 +152,13 @@ namespace CorridaDosDados.ConsoleApp
                 Console.WriteLine(" ----- O JOGADOR VENCEU!!! -----\n");
             }
             else if (turno == "cpu")
+            {
                 Console.Clear();
                 Console.WriteLine(" ----- A CPU VENCEU!!! -----\n");
-
-            program.posicaoJogador = 0;
-            program.posicaoCpu = 0;
+            }
+                
+            posicaoJogador = 0;
+            posicaoCpu = 0;
 
             Console.WriteLine(" Obrigado por jogar!");
 
@@ -177,6 +178,7 @@ namespace CorridaDosDados.ConsoleApp
         {
             var program = new Program();
 
+            constroiArrayVetorCaminhoPartida();
             criaEventosEspeciais();
 
             bool partida = false;
@@ -187,63 +189,63 @@ namespace CorridaDosDados.ConsoleApp
                 int resultadoDado = 0;
                 // executa o turno do jogador
 
-                program.turnoAtivo = true;
-                while (program.turnoAtivo == true)
+                turnoAtivo = true;
+                while (turnoAtivo == true)
                 {
                     confirmacaoComando();
 
                     resultadoDado = dado();
                     Console.WriteLine($"\n Dado do jogador: {resultadoDado}");
 
-                    program.posicaoJogador += resultadoDado;
+                    posicaoJogador += resultadoDado;
 
-                    if (program.posicaoJogador <= 30)
-                        ifEventoEspecial(program.posicaoJogador, "jogador");
+                    if (posicaoJogador <= 30)
+                        ifEventoEspecial(posicaoJogador, "jogador");
 
-                    if (program.posicaoJogador < 30)
-                        Console.WriteLine($" Posição do jogador: {program.posicaoJogador}");
+                    if (posicaoJogador < 30)
+                        Console.WriteLine($" Posição do jogador: {posicaoJogador}");
 
-                    if (program.turnoAtivo == false)
-                        program.turnoAtivo = true;
+                    if (turnoAtivo == false)
+                        turnoAtivo = true;
                     else
-                        program.turnoAtivo = false;
+                        turnoAtivo = false;
                 }
 
-                if (condicaoVitoria(program.posicaoJogador) == true)
+                if (condicaoVitoria(posicaoJogador) == true)
                 {
-                    program.vitorioso = "jogador";
+                    vitorioso = "jogador";
                     break;
                 }
 
                 // executa o turno da CPU
-                program.turnoAtivo = true;
-                while (program.turnoAtivo == true)
+                turnoAtivo = true;
+                while (turnoAtivo == true)
                 {
                     resultadoDado = dado();
                     Console.WriteLine($"\n Dado da CPU: {resultadoDado}");
 
-                    program.posicaoCpu += resultadoDado;
+                    posicaoCpu += resultadoDado;
 
-                    if (program.posicaoCpu <= 30)
-                        ifEventoEspecial(program.posicaoCpu, "cpu");
+                    if (posicaoCpu <= 30)
+                        ifEventoEspecial(posicaoCpu, "cpu");
 
-                    if (program.posicaoCpu < 30)
-                        Console.WriteLine($" Posição da CPU: {program.posicaoCpu}");
+                    if (posicaoCpu < 30)
+                        Console.WriteLine($" Posição da CPU: {posicaoCpu}");
 
-                    if (program.turnoAtivo == false)
-                        program.turnoAtivo = true;
+                    if (turnoAtivo == false)
+                        turnoAtivo = true;
                     else
-                        program.turnoAtivo = false;
+                        turnoAtivo = false;
                 }
 
-                if (condicaoVitoria(program.posicaoCpu) == true)
+                if (condicaoVitoria(posicaoCpu) == true)
                 {
-                    program.vitorioso = "cpu";
+                    vitorioso = "cpu";
                     break;
                 }
             }
 
-            visualizarVitoriaDerrota(program.vitorioso);
+            visualizarVitoriaDerrota(vitorioso);
         }
     }
 }
