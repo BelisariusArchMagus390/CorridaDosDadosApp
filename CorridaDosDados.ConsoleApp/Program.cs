@@ -150,11 +150,15 @@ namespace CorridaDosDados.ConsoleApp
             {
                 Console.Clear();
                 Console.WriteLine(" ----- O JOGADOR VENCEU!!! -----\n");
+                Console.WriteLine(" Aperte Enter para continuar...");
+                Console.ReadLine();
             }
             else if (turno == "cpu")
             {
                 Console.Clear();
                 Console.WriteLine(" ----- A CPU VENCEU!!! -----\n");
+                Console.WriteLine(" Aperte Enter para continuar...");
+                Console.ReadLine();
             }
                 
             posicaoJogador = 0;
@@ -189,10 +193,14 @@ namespace CorridaDosDados.ConsoleApp
                 int resultadoDado = 0;
                 // executa o turno do jogador
 
+                Console.Clear();
+
                 turnoAtivo = true;
                 while (turnoAtivo == true)
                 {
                     confirmacaoComando();
+
+                    Console.WriteLine("\n ---------------------------------------");
 
                     resultadoDado = dado();
                     Console.WriteLine($"\n Dado do jogador: {resultadoDado}");
@@ -205,6 +213,8 @@ namespace CorridaDosDados.ConsoleApp
                     if (posicaoJogador < 30)
                         Console.WriteLine($" Posição do jogador: {posicaoJogador}");
 
+                    Console.WriteLine("\n ---------------------------------------");
+
                     if (turnoAtivo == false)
                         turnoAtivo = true;
                     else
@@ -216,6 +226,8 @@ namespace CorridaDosDados.ConsoleApp
                     vitorioso = "jogador";
                     break;
                 }
+
+                Console.WriteLine(" ---------------------------------------");
 
                 // executa o turno da CPU
                 turnoAtivo = true;
@@ -232,6 +244,8 @@ namespace CorridaDosDados.ConsoleApp
                     if (posicaoCpu < 30)
                         Console.WriteLine($" Posição da CPU: {posicaoCpu}");
 
+                    Console.WriteLine("\n ---------------------------------------");
+
                     if (turnoAtivo == false)
                         turnoAtivo = true;
                     else
@@ -243,8 +257,10 @@ namespace CorridaDosDados.ConsoleApp
                     vitorioso = "cpu";
                     break;
                 }
-            }
 
+                Console.WriteLine("\n\n Aperte Enter para continuar...");
+                Console.ReadLine();
+            }
             visualizarVitoriaDerrota(vitorioso);
         }
     }
