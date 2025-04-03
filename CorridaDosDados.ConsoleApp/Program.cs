@@ -120,6 +120,13 @@ namespace CorridaDosDados.ConsoleApp
             }
         }
 
+        // rola o dado de 6 lados
+        static int dado()
+        {
+            Random numeroAleatorio = new Random();
+            return numeroAleatorio.Next(1, 7);
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
