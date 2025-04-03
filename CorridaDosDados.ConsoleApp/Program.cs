@@ -19,6 +19,24 @@
             { "+turn", ["+", "Você ultrapassou muito o outro competidor, mais 1 turno"] }
         };
 
+        // verifica a entrada do usuário
+        static void confirmacaoComando()
+        {
+            bool comandoApertado = false;
+            while (comandoApertado == false)
+            {
+                Console.Write("\nVez do jogador rolar o dado: ");
+                string comando = Console.ReadLine();
+
+                if (comando == "")
+                    comandoApertado = true;
+                else
+                    Console.WriteLine("\nEntrada incorreta");
+            }
+        }
+
+        // cria o mapameanto dos eventos especiais da partida
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
