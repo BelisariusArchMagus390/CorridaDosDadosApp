@@ -24,7 +24,6 @@ namespace CorridaDosDados.ConsoleApp
 
         static void constroiArrayVetorCaminhoPartida()
         {
-            var program = new Program();
             // definindo arrays inteiro e string de vetorCaminhoPartida
             int[] vetorCaminhoPartidaInt = Enumerable.Repeat(0, 30).ToArray();
             int arrayTamanho = vetorCaminhoPartidaInt.Length;
@@ -53,7 +52,6 @@ namespace CorridaDosDados.ConsoleApp
         // cria o mapameanto dos eventos especiais da partida
         static void criaEventosEspeciais()
         {
-            var program = new Program();
             // cria lista com o nome dos eventos especiais
             string[] vetorEventosEspeciais = eventosEspeciais.Keys.ToArray();
 
@@ -81,7 +79,6 @@ namespace CorridaDosDados.ConsoleApp
         // verifica de se ocorreu ou não um evento e a aplicação do seu efeito caso seja detectado
         static void ifEventoEspecial(int posicao, string turno)
         {
-            var program = new Program();
             string evento = "";
             string descricao = "";
             int efeito = 0;
@@ -144,8 +141,6 @@ namespace CorridaDosDados.ConsoleApp
         // faz a visualização da resolução da partida
         static void visualizarVitoriaDerrota(string turno)
         {
-            var program = new Program();
-
             if (turno == "player")
             {
                 Console.Clear();
@@ -180,8 +175,6 @@ namespace CorridaDosDados.ConsoleApp
 
         static void Main(string[] args)
         {
-            var program = new Program();
-
             constroiArrayVetorCaminhoPartida();
             criaEventosEspeciais();
 
