@@ -65,7 +65,7 @@ namespace CorridaDosDados.ConsoleApp
             int posicaoCaminho = 0;
             int posicao = 0;
 
-            // cria o vetor mapeada com o os eventos especiais
+            // cria o vetor mapeado com o os eventos especiais
             for (int i = 0; i < DeEventosEspeciais; i++)
             {
                 posicaoCaminho = numeroAleatorio.Next(0, 31);
@@ -75,6 +75,47 @@ namespace CorridaDosDados.ConsoleApp
                     posicao = numeroAleatorio.Next(0, 5);
 
                     vetorCaminhoPartida[posicaoCaminho] = vetorEventosEspeciais[posicao];
+                }
+            }
+        }
+
+        // verifica de se ocorreu ou não um evento e a aplicação do seu efeito caso seja detectado
+        void ifEventoEspecial(int posicao, string turno)
+        {
+            string evento = "";
+            string descricao = "";
+            int efeito = 0;
+
+            if (resultadoDado == 6)
+            {
+                evento = "+turn";
+                // string[] descricaoArray = eventosEspeciais[evento];
+                descricao = eventosEspeciais[evento][1];
+
+                Console.WriteLine($"Evento especial! {descricao}");
+                turnoAtivo = false;
+            }
+            else if (vetorCaminhoPartida[posicao] != "0")
+            {
+                evento = vetorCaminhoPartida[posicao];
+                efeito =  int.Parse(eventosEspeciais[evento][0]);
+                descricao = eventosEspeciais[evento][1];
+
+                Console.WriteLine($"Evento especial! {descricao}");
+
+                if (turno == "jogador")
+                {
+                    if (efeito == 0)
+                        posicaoJogador -= resultadoDado;
+                    else
+                        posicaoJogador += efeito;
+                }
+                else if (turno == "cpu")
+                {
+                    if (efeito == 0)
+                        posicaoCpu -= resultadoDado;
+                    else
+                        posicaoCpu += efeito;
                 }
             }
         }
